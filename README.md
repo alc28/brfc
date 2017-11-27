@@ -1,5 +1,6 @@
 # brfc
  
  
-# Beechtree Resident and Family Council Data Repository
+# Beechtree Resident and Family Council
+## Code and Data Repository
 Maintained by Adam Chandler
