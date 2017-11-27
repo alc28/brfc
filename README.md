@@ -1,4 +1,5 @@
 # brfc
- Beechtree Resident and Family Council
  
- Github repository maintained by Adam Chandler
+ 
+# Beechtree Resident and Family Council Data Repository
+Maintained by Adam Chandler
