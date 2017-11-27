@@ -9,20 +9,41 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, load_libraries, results='hide', message=FALSE, warning=FALSE, echo=FALSE}
+# load libraries
+library(tidyverse)
+library(readr)
+library(readxl)
+library(stringr)
+library(openxlsx)
+library(knitr)
 
-```{r read}
-# read data
+```
+
+```{r load_ltccc_pbj}
 
 library(readxl)
 pbj_direct_care_staff_2017Q2 <- read_excel("data/ltccc/US-SNF-PBJ-Direct-Care-Staff-2017Q2.xlsx", sheet = "US SNF Staffing")
 
 ```
 
-```{r transform}
-# transform
+```{r, load_medicare_ownership}
+# load source medicare.gov
 
-
+medicare_ownership <- read_csv("data/medicare.gov/Ownership_Download.csv", col_types = cols(ZIP = col_character()))
 
 ```
 
+```{r, id_usg}
+
+beechtree_by_provnum <- medicare_ownership %>%
+  filter(PROVNUM == '335017')
+
+usg_provnum <- medicare_ownership %>%
+  filter(OWNER_NAME == 'KOENIG, URI') %>%
+  select(PROVNUM)
+
+usg_by_provnum <- medicare_ownership %>% subset(PROVNUM %in% usg_provnum$PROVNUM)
+
+```
 
