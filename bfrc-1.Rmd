@@ -47,3 +47,9 @@ usg_by_provnum <- medicare_ownership %>% subset(PROVNUM %in% usg_provnum$PROVNUM
 
 ```
 
+```{r start_visualizing}
+
+kable(head(usg_by_provnum,3))
+
+```
+
