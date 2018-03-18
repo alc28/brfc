@@ -1,0 +1,35 @@
+---
+title: "beechtree provider info"
+author: "Adam Chandler"
+date: "3/10/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Beechtree Center for Rehabilitation and Nursing
+
+
+```{r echo = FALSE, warnings=FALSE}
+
+library(tidyverse)
+
+provider_info <- read_csv("data/medicare.gov/Provider_Info.csv")
+
+```
+
+
+```{r echo = TRUE}
+
+beechtree <- provider_info %>%
+  filter(`Federal Provider Number` == "335017")
+
+df_tidy <- beechtree %>%
+  gather(key = 'metric', value = 'value')
+
+df_tidy
+
+```
+
