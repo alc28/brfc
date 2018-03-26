@@ -48,17 +48,17 @@ tidy_summary <- gather(df, key = "key", value = "value", 2:2)
 tidy_summary$key[tidy_summary$key == "cna_to_census"] <- "Average daily CNA hours per resident"
 
 ggplot(tidy_summary, aes(x = reorder(PROVNAME, value), value, label=value)) +
-  geom_label(size = 3) +
+  geom_label(size = 5) +
  # annotate("text", x=-Inf, y=Inf, label = paste("Average = ", mean(df$cna_to_census)), size = 4, vjust=-22, hjust=1.5) +
   facet_grid(~key) +
   labs(x = "Facility",
        y = "CNA hours per resident day",
        title = "Average CNA hours per resident day, 2017 Jan - Sep",
        subtitle = "Long term care facilities owned by Uri Koenig (Upstate Services Group)",
-       caption = "Data source: Payroll-Based Journal data, medicare.gov ") +
+       caption = "Data source: Payroll-Based Journal datasets, http://data.cms.gov/ ") +
   scale_y_continuous(breaks=seq(0, 3, 0.2)) +
   theme(axis.text.x = element_text(vjust=.25, size = 7)) +
-  coord_flip()
+  coord_flip() 
 
 ggsave(plot=last_plot(),"output/usg_cna_hprd_2017_jan-sep.png", width=10, height = 6)
 

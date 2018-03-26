@@ -62,13 +62,13 @@ tidy_summary$PROVNAME[tidy_summary$PROVNAME == "KENDAL AT ITHACA"] <- "Kendal at
 # 
 
 ggplot(tidy_summary, aes(x = reorder(PROVNAME, value), value, label=value)) +
-  geom_label(size = 3) +
+  geom_label(size = 5) +
   facet_grid(~key) +
   labs(x = "Facility",
        y = "CNA hours per resident day",
        title = "Average CNA hours per resident day, 2017 Jan - Sep",
        subtitle = "Long term care facilities in Ithaca, NY",
-       caption = "Data source: Payroll-Based Journal data, medicare.gov ") +
+       caption = "Data source: Payroll-Based Journal datasets, http://data.cms.gov/ ") +
   scale_y_continuous(breaks=seq(0, 3, 0.2)) +
   theme(axis.text.x = element_text(vjust=.25, size = 7)) +
   coord_flip()
