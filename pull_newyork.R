@@ -15,18 +15,29 @@ get_mphrd <- function(mds, cna_hours) {
 }
 
 unzip("../large_files/PBJ_Daily_Nurse_Staffing_2017_Q1-Q3.zip") 
+unzip("../large_files/PBJ_Daily_Nurse_Staffing_2017_Q4.zip")
 
 pbj_2017_q1 <- read_csv("PBJ_Daily_Nurse_Staffing_2017_Q1.csv")
 pbj_2017_q2 <- read_csv("PBJ_Daily_Nurse_Staffing_2017_Q2.csv")
 pbj_2017_q3 <- read_csv("PBJ_Daily_Nurse_Staffing_2017_Q3.csv")
+pbj_2017_q4 <- read_csv("PBJ_Daily_Nurse_Staffing_2017_Q4.csv")
 
 
 pbj_2017_all <- rbind(pbj_2017_q1, pbj_2017_q2)
 pbj_2017_all <- rbind(pbj_2017_all, pbj_2017_q3)
+pbj_2017_all <- rbind(pbj_2017_all, pbj_2017_q4)
 
 remove(pbj_2017_q1)
 remove(pbj_2017_q2)
 remove(pbj_2017_q3)
+remove(pbj_2017_q4)
+
+file.remove("PBJ_Daily_Nurse_Staffing_2017_Q1.csv")
+file.remove("PBJ_Daily_Nurse_Staffing_2017_Q2.csv")
+file.remove("PBJ_Daily_Nurse_Staffing_2017_Q3.csv")
+file.remove("PBJ_Daily_Nurse_Staffing_2017_Q4.csv")
+
+
 
 pbj_2017_all$WorkDate <- ymd(pbj_2017_all$WorkDate)
 pbj_2017_all$day <- wday(as.Date(pbj_2017_all$WorkDate,'%Y-%m-%d'), label=TRUE)
@@ -41,4 +52,4 @@ pbj_2017_all <- pbj_2017_all %>%
 newyork <- pbj_2017_all %>%
   filter(STATE == "NY")
 
-write_csv(newyork, "data/newyork_2017_q1_q3.csv")
+write_csv(newyork, "data/newyork_2017.csv")

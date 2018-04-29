@@ -14,21 +14,17 @@ get_mphrd <- function(mds, cna_hours) {
 }
 
 
-pbj_2017_q1 <- read_csv("data/medicare.gov/PBJ_Daily_Nurse_Staffing_2017_Q1.csv")
-pbj_2017_q2 <- read_csv("data/medicare.gov/PBJ_Daily_Nurse_Staffing_2017_Q2.csv")
-pbj_2017_q3 <- read_csv("data/medicare.gov/PBJ_Daily_Nurse_Staffing_2017_Q3.csv")
+#pbj_2017_q1 <- read_csv("data/medicare.gov/PBJ_Daily_Nurse_Staffing_2017_Q1.csv")
+#pbj_2017_q2 <- read_csv("data/medicare.gov/PBJ_Daily_Nurse_Staffing_2017_Q2.csv")
+#pbj_2017_q3 <- read_csv("data/medicare.gov/PBJ_Daily_Nurse_Staffing_2017_Q3.csv")
 
+pbj_2017 <- read_csv("data/newyork_2017.csv")
 #medicare_ownership <- read_csv("data/medicare.gov/Ownership_Download.csv", col_types = cols(ZIP = col_character()))
 
 #beechtree_by_provnum <- medicare_ownership %>%
 #  filter(PROVNUM == '335017')
 
-pbj_2017_all <- rbind(pbj_2017_q1, pbj_2017_q2)
-pbj_2017_all <- rbind(pbj_2017_all, pbj_2017_q3)
-
-remove(pbj_2017_q1)
-remove(pbj_2017_q2)
-remove(pbj_2017_q3)
+pbj_2017_all <- pbj_2017
 
 df <- head(pbj_2017_all)
 df$WorkDate <- ymd(df$WorkDate)
@@ -70,20 +66,20 @@ df_beechtree$mycaption[df_beechtree$WorkDate == "2017-09-12"] <- "\n\n\nTues, Se
 # hours per resident day
 ggplot(df_beechtree, aes(WorkDate, cna_hprd, label = mycaption), vjust = 0.3) +
   theme_grey() +
-  theme(legend.position = c(0.950,0.80), plot.title = element_text(size = rel(2)), plot.caption = element_text(size = rel(0.6)), axis.text.y = element_text(size = rel(1.5))) +
-  geom_line(size = 0.1) +
+#  theme(legend.position = c(0.950,0.80), plot.title = element_text(size = rel(2)), plot.caption = element_text(size = rel(0.6)), axis.text.y = element_text(size = rel(1.5))) +
+    geom_line(size = 0.1) +
   scale_x_date(date_breaks="1 month", date_labels = "%b") +
   scale_y_continuous(limits = c(0.5, 3.0), breaks = seq(0,5, by = 0.5)) +
   ggtitle("\nCNA hours per resident day (HPRD)", subtitle = "Beechtree Center for Rehabilitation and Nursing, Ithaca NY") +
-  xlab("January 1 - September 30, 2017") +
+  xlab("January 1 - December 31, 2017") +
   ylab("Hours") +
   labs(caption = paste("HPRD = total CNA hours / number of residents \nData source: https://data.cms.gov/browse?q=PBJ \nCompiled by Adam Chandler, Beechtree Family Council,", now(), "\n\n")) +
   geom_text(data=subset(df_beechtree, !is.na(mycaption)), size = rel(3)) +
-#  geom_point(size = 1.35, aes(color = day)) + scale_color_brewer(palette = "Greys")
-  geom_point(size = 1.35, aes(fill = day), shape = 21) + scale_fill_brewer("day")
-
+  geom_point(size = 1.35, aes(fill = day), shape = 21) + scale_fill_brewer("day") 
+#  theme(legend.position = c(0.68,0.82), plot.title = element_text(size = rel(2)), plot.caption = element_text(size = rel(0.6)), axis.text.y = element_text(size = rel(1.5)))
+  
    
-ggsave(plot = last_plot(), filename = "output/cna_hprd_q1-q3-2017_8.5x14.pdf", height = 8.5, width = 14, units = "in", dpi = 300)
+ggsave(plot = last_plot(), filename = "output/cna_hprd-2017_8.5x14.pdf", height = 8.5, width = 14, units = "in", dpi = 300)
 
 
 

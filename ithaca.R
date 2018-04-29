@@ -14,7 +14,7 @@ get_mphrd <- function(mds, cna_hours) {
 }
 
 
-pbj_2017_all <- read_csv("data/medicare.gov/newyork_2017_q1_q3.csv")
+pbj_2017_all <- read_csv("data/newyork_2017.csv")
 pbj_2017_all$WorkDate <- ymd(pbj_2017_all$WorkDate)
 pbj_2017_all$day <- wday(as.Date(pbj_2017_all$WorkDate,'%Y-%m-%d'), label=TRUE)
 day_levels <- c("Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun")
@@ -66,12 +66,12 @@ ggplot(tidy_summary, aes(x = reorder(PROVNAME, value), value, label=value)) +
   facet_grid(~key) +
   labs(x = "Facility",
        y = "CNA hours per resident day",
-       title = "Average CNA hours per resident day, 2017 Jan - Sep",
+       title = "Average CNA hours per resident day, 2017",
        subtitle = "Long term care facilities in Ithaca, NY",
        caption = "Data source: Payroll-Based Journal datasets, http://data.cms.gov/ ") +
   scale_y_continuous(breaks=seq(0, 3, 0.2)) +
   theme(axis.text.x = element_text(vjust=.25, size = 7)) +
   coord_flip()
 
-ggsave(plot=last_plot(),"output/Ithaca_cna_hprd_2017_jan-sep.png", width=10, height = 6)
+ggsave(plot=last_plot(),"output/Ithaca_cna_hprd_2017.png", width=10, height = 6)
 
