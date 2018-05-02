@@ -53,3 +53,4 @@ newyork <- pbj_2017_all %>%
   filter(STATE == "NY")
 
 write_csv(newyork, "data/newyork_2017.csv")
+
