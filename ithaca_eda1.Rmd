@@ -1,0 +1,117 @@
+---
+title: "Ithaca Nursing Homes, 2017 Summary"
+author: "Adam Chandler"
+date: "5/6/2018"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+
+library(tidyverse)
+library(readr)
+library(lubridate)
+library(stringr)
+library(forcats)
+library(ggthemes)
+
+
+get_mphrd <- function(mds, cna_hours) {
+  cna_minutes = cna_hours * 60
+  (cna_minutes / mds) / 24
+}
+
+
+pbj_2017_all <- read_csv("data/newyork_2017.csv")
+
+pbj_2017_ithaca <- pbj_2017_all %>%
+  filter(PROVNUM %in% c("335017", "335249", "335225", "335793"))
+
+df_ithaca <- pbj_2017_ithaca %>% 
+  group_by(PROVNAME) %>%
+  summarize(cna_to_census = round(mean(cna_hprd),2)) %>%
+  arrange(desc(cna_to_census))
+
+
+tidy_summary <- gather(df_ithaca, key = "key", value = "value", 2:2)
+tidy_summary$key[tidy_summary$key == "cna_to_census"] <- "Average daily CNA hours per resident"
+
+tidy_summary$PROVNAME[tidy_summary$PROVNAME == "BEECHTREE CENTER FOR REHABILITATION AND NURSING"] <- "Beechtree"
+tidy_summary$PROVNAME[tidy_summary$PROVNAME == "OAK HILL MANOR NURSING HOME"] <- "Oak Hill Manor"
+tidy_summary$PROVNAME[tidy_summary$PROVNAME == "CAYUGA RIDGE EXTENDED CARE"] <- "Cayuga Ridge"
+tidy_summary$PROVNAME[tidy_summary$PROVNAME == "KENDAL AT ITHACA"] <- "Kendal at Ithaca"
+
+
+# [FC understanding of the current starting wages for CNAs in Ithaca are: Beechtree: $12.50, Cayuga Ridge: $13.75, Oak Hill: $14.25, Kendal: $16.25.]
+
+tidy_summary$mycaption <- NA
+tidy_summary$mycaption[tidy_summary$PROVNAME == "Beechtree"] <- "$12.50"
+tidy_summary$mycaption[tidy_summary$PROVNAME == "Oak Hill Manor"] <- "$14.25"
+tidy_summary$mycaption[tidy_summary$PROVNAME == "Cayuga Ridge"] <- "$13.75"
+tidy_summary$mycaption[tidy_summary$PROVNAME == "Kendal at Ithaca"] <- "$16.25"
+
+
+```
+
+
+
+```{r, include=FALSE}
+
+# CNA
+ithaca_cna_summary <- pbj_2017_ithaca %>% 
+  group_by(str_trunc(PROVNAME,20), CY_Qtr) %>%
+  summarise(mean_census = mean(MDScensus), mean = mean(cna_hprd), median = median(cna_hprd), max = max(cna_hprd), min = min(cna_hprd), variance = var(cna_hprd)) %>%
+  mutate_each(funs(round(.,2)), mean_census, mean, median, max, min, variance)
+names(ithaca_cna_summary)[1] <- "facility"
+
+
+ithaca_rnpluslpn_summary <- pbj_2017_ithaca %>%
+  mutate(rn_plus_lpn_hprd =rn_hprd + lpn_hprd) %>%
+    group_by(str_trunc(PROVNAME,20), CY_Qtr) %>%
+  summarise( mean_census = mean(MDScensus), mean = mean(rn_plus_lpn_hprd), median = median(rn_plus_lpn_hprd), max = max(rn_plus_lpn_hprd), min = min(rn_plus_lpn_hprd), variance = var(rn_plus_lpn_hprd)) %>%
+  mutate_each(funs(round(.,2)), mean_census, mean, median, max, min, variance)
+
+names(ithaca_rnpluslpn_summary)[1] <- "facility"
+
+
+# by day of week
+
+# CNA
+# ithaca_day_cna_summary <- pbj_2017_ithaca %>% 
+#   group_by(PROVNAME, day) %>%
+#   summarise(mean_census = mean(MDScensus), mean = mean(cna_hprd), median = median(cna_hprd), max = max(cna_hprd), min = min(cna_hprd), variance = var(cna_hprd)) %>%
+#   mutate_each(funs(round(.,2)), mean_census, mean, median, max, min, variance)
+# 
+# names(ithaca_day_cna_summary)[1] <- "facility"
+# 
+# ithaca_day_cna_summary <- ithaca_day_cna_summary %>%
+#   arrange(facility, mean)
+
+```
+
+
+## CNA staffing by facility and quarter
+
+```{r, echo=FALSE, results='asis'}
+
+library(knitr)
+kable(ithaca_cna_summary)
+
+```
+
+
+## RN plus LPN staffing by facility and quarter
+
+```{r, echo=FALSE, results='asis'}
+
+library(knitr)
+kable(ithaca_rnpluslpn_summary)
+
+```

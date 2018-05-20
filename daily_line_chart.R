@@ -28,9 +28,9 @@ pbj_2017_beechtree %>%
   group_by(CY_Qtr) %>%
   summarise(mean = mean(rn_hprd + lpn_hprd), median = median(rn_hprd + lpn_hprd), high = max(rn_hprd + lpn_hprd), min = min(rn_hprd + lpn_hprd))
 
-var(pbj_2017_beechtree$cna_hprd)
-var(pbj_2017_beechtree$rn_hprd)
-var(pbj_2017_beechtree$lpn_hprd)
+# var(pbj_2017_beechtree$cna_hprd)
+# var(pbj_2017_beechtree$rn_hprd)
+# var(pbj_2017_beechtree$lpn_hprd)
 
 # CNA by day
 pbj_2017_beechtree %>% 
@@ -56,6 +56,9 @@ ggplot(df_beechtree, aes(WorkDate, cna_hprd, label = mycaption), vjust = 0.3) +
   labs(caption = paste("HPRD = total CNA hours / number of residents \nData source: https://data.cms.gov/browse?q=PBJ \nCompiled by Adam Chandler, Beechtree Family Council,", now(), "\n\n")) +
   geom_text(data=subset(df_beechtree, !is.na(mycaption)), size = rel(3)) +
   geom_point(size = 1.35, aes(fill = day), shape = 21) + scale_fill_brewer("day") 
+ggsave(plot = last_plot(), filename = "output/beechtree_cna_hprd-2017_8.5x14.pdf", height = 8.5, width = 14, units = "in", dpi = 300)
+
+ggsave(plot = last_plot(), filename = "output/beechtree_cna_hprd-2017_8.5x11.pdf", height = 8.5, width = 11, units = "in", dpi = 300)
 
 
 ggplot(df_beechtree, aes(WorkDate, rn_hprd, label = mycaption), vjust = 0.3) +
@@ -63,20 +66,25 @@ ggplot(df_beechtree, aes(WorkDate, rn_hprd, label = mycaption), vjust = 0.3) +
   geom_line(size = 0.1) +
   scale_x_date(date_breaks="1 month", date_labels = "%b") +
   scale_y_continuous(limits = c(0.0, 1.5), breaks = seq(0,5, by = 0.5)) +
-  ggtitle("\nRN hours per resident day (HPRD)", subtitle = "Beechtree Center for Rehabilitation and Nursing, Ithaca NY") +
+  ggtitle("\nRN hours per resident day (HPRD), Jan 1 - Dec 31, 2017", subtitle = "Beechtree Center for Rehabilitation and Nursing, Ithaca NY") +
   xlab("January 1 - December 31, 2017") +
   ylab("Hours") +
   labs(caption = paste("HPRD = total RN hours / number of residents \nData source: https://data.cms.gov/browse?q=PBJ \nCompiled by Adam Chandler, Beechtree Family Council,", now(), "\n\n")) +
   geom_text(data=subset(df_beechtree, !is.na(mycaption)), size = rel(3)) +
   geom_point(size = 1.35, aes(fill = day), shape = 21) + scale_fill_brewer("day") 
+ggsave(plot = last_plot(), filename = "output/beechtree_rn_hprd-2017_8.5x14.pdf", height = 8.5, width = 14, units = "in", dpi = 300)
 
+ggsave(plot = last_plot(), filename = "output/beechtree_rn_hprd-2017_8.5x11.pdf", height = 8.5, width = 11, units = "in", dpi = 300)
+
+
+#########
 
 ggplot(df_beechtree, aes(WorkDate, lpn_hprd, label = mycaption), vjust = 0.3) +
   theme_grey() +
   geom_line(size = 0.1) +
   scale_x_date(date_breaks="1 month", date_labels = "%b") +
   scale_y_continuous(limits = c(0.0, 1.5), breaks = seq(0,5, by = 0.5)) +
-  ggtitle("\nLPN hours per resident day (HPRD)", subtitle = "Beechtree Center for Rehabilitation and Nursing, Ithaca NY") +
+  ggtitle("\nLPN hours per resident day (HPRD), Jan 1 - Dec 31, 2017", subtitle = "Beechtree Center for Rehabilitation and Nursing, Ithaca NY") +
   xlab("January 1 - December 31, 2017") +
   ylab("Hours") +
   labs(caption = paste("HPRD = total LPN hours / number of residents \nData source: https://data.cms.gov/browse?q=PBJ \nCompiled by Adam Chandler, Beechtree Family Council,", now(), "\n\n")) +
@@ -120,4 +128,10 @@ tidy_ithaca %>% filter(staff_type == "cna_hprd") %>%
   geom_line() +
   #scale_y_continuous(limits = c(0, 3.0), breaks = seq(0,5, by = 0.5)) +
   facet_wrap(~ PROVNAME, ncol = 1)  
+
+##################
+
+summary_beechtree <- pbj_2017_beechtree[,grepl("hprd", colnames(pbj_2017_beechtree))]
+
+summary(summary_beechtree)
 
